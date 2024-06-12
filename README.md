@@ -1,2 +1,2 @@
 # springcloud-mall-practice
-一个Spring Cloud联系项目
+一个Spring Cloud练习项目

@@ -17,7 +17,10 @@
 	<description>Demo project for Spring Boot</description>
 	<modules>
 		<module>cloud-mall-eureka-server</module>
-	</modules>
+		<module>cloud-mall-user</module>
+		<module>cloud-mall-common</module>
+        <module>cloud-mall-zuul</module>
+    </modules>
 
 	<properties>
 		<java.version>1.8</java.version>

@@ -12,7 +12,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableZuulProxy
 @EnableFeignClients
 @SpringCloudApplication
-@EnableRedisHttpSession
+@EnableRedisHttpSession  // 用于配置Spring Session支持将会话信息存储在Redis中，而不是默认的基于内存的存储方式
 public class ZuulGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(ZuulGatewayApplication.class, args);

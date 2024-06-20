@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * 描述： UserFeignClient
  */
-@FeignClient(value = "cloud-mall-user")
+@FeignClient(value = "cloud-mall-user")  // 用于创建和配置Feign客户端
 public interface UserFeignClient {
     // 复制调用的接口，不包括具体实现
     @PostMapping("/checkAdminRole")

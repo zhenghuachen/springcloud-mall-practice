@@ -17,6 +17,8 @@ public enum ImoocMallExceptionEnum {
     NEED_ADMIN(10011, "非管理员，无法操作"),
     CREATE_FAILED(10012, "创建失败"),
     DELETE_FAILED(10013, "删除失败"),
+    MKDIR_FAILED(10014, "创建文件夹失败"),
+    UPLOAD_FAILED(10014, "上次失败"),
     SYSTEM_ERROR(20000, "系统异常");
     /**
      * 异常码

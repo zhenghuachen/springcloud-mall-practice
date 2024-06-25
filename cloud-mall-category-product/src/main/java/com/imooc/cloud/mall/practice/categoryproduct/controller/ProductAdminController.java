@@ -72,6 +72,7 @@ public class ProductAdminController {
             e.printStackTrace();
         }
         try {
+            // 不要遗漏统一前缀"/category-product"
             return ApiRestResponse
                     .success(getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/category-product/images/"
                             + newFileName);
@@ -83,6 +84,7 @@ public class ProductAdminController {
     private URI getHost(URI uri) {
         URI effectiveURI;
         try {
+            // 微服务中IP和端口号是经过网关转发的,不是直接请求的(原有服务是不直接对外暴露的,都是通过网关转发的)
             effectiveURI = new URI(uri.getScheme(), uri.getUserInfo(), ip, port,
                     null, null, null);
         } catch (URISyntaxException e) {

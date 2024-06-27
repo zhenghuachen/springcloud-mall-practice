@@ -9,6 +9,7 @@ import com.imooc.cloud.mall.practice.common.common.ApiRestResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +34,16 @@ public class ProductController {
     public ApiRestResponse list(ProductListReq productListReq) {
         PageInfo list = productService.list(productListReq);
         return ApiRestResponse.success(list);
+    }
+
+    @GetMapping("product/detailForFeign")   // 获取商品信息(内部调用，购物车模块cart)
+    public Product detailForFeign(@RequestParam Integer id) {
+        Product product = productService.detail(id);
+        return product;
+    }
+
+    @PostMapping("product/updateStock")
+    public void updateStock(@RequestParam Integer productId, @RequestParam Integer stock) {
+        productService.updateStock(productId, stock);
     }
 }

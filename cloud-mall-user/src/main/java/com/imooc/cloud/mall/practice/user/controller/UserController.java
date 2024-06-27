@@ -14,10 +14,7 @@ import com.imooc.cloud.mall.practice.user.server.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 描述：     用户控制器
@@ -135,6 +132,19 @@ public class UserController {
     @ResponseBody
     public Boolean checkAdminRole(@RequestBody User user) {
         return userService.checkAdminRole(user);
+    }
+
+    /**
+     * 获取当前登录的User对象
+     * 为了避免暴露用户信息，可以在Filter中对getUser进行拦截
+     * @param session
+     * @return
+     */
+    @GetMapping("/getUser")
+    @ResponseBody  // 指定返回为JSON
+    public User getUser(HttpSession session) {
+        User currentUser = (User) session.getAttribute(Constant.IMOOC_MALL_USER);
+        return currentUser;
     }
 
 }

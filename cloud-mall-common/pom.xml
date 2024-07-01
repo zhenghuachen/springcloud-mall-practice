@@ -18,4 +18,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- ZXing是一个开源的条形码和二维码处理库，能够在Java程序中进行条形码的生成和解析。 -->
+    <dependencies>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+    </dependencies>
+
 </project>

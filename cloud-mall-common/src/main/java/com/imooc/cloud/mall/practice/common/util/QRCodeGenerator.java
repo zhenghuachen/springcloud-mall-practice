@@ -25,7 +25,7 @@ public class QRCodeGenerator {
 
     public static void main(String[] args) {
         try {
-            generateQRCodeImage("Hello World", 350, 350, "/Users/didi/Desktop/IdeaProjects/imooc-mall-prepare-static/QRTest.png");
+            generateQRCodeImage("Hello World", 350, 350, "/Users/chenzh12/Desktop/Learn/imooc-mall-prepare-static/QRTest.png");
         } catch (WriterException e) {
             e.printStackTrace();
         } catch (IOException e) {

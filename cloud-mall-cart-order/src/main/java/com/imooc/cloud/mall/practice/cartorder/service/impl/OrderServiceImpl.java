@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
     UserFeignClient userFeignClient;
 
     //数据库事务
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)  // 在执行过程中如果发生任何异常（Exception），则进行事务回滚（rollback）
     @Override
     public String create(CreateOrderReq createOrderReq) {
 

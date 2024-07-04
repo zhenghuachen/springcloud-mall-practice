@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -239,7 +241,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancel(String orderNo) {
+    public void cancel(String orderNo, Boolean isFromSystem) {
         Order order = orderMapper.selectByOrderNo(orderNo);
         //查不到订单，报错
         if (order == null) {
@@ -247,10 +249,12 @@ public class OrderServiceImpl implements OrderService {
         }
         //验证用户身份
         //订单存在，需要判断所属
-        Integer userId = userFeignClient.getUser()
-                .getId();
-        if (!order.getUserId().equals(userId)) {
-            throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
+        if (!isFromSystem) {
+            Integer userId = userFeignClient.getUser()
+                    .getId();
+            if (!order.getUserId().equals(userId)) {
+                throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
+            }
         }
         if (order.getOrderStatus().equals(OrderStatusEnum.NOT_PAID.getCode())) {
             order.setOrderStatus(OrderStatusEnum.CANCELED.getCode());
@@ -258,6 +262,16 @@ public class OrderServiceImpl implements OrderService {
             orderMapper.updateByPrimaryKeySelective(order);
         } else {
             throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
+        }
+        // 回复商品库存
+        // 获取订单对应的orderitemList
+        List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(order.getOrderNo());
+        for (int i = 0; i < orderItemList.size(); i++) {
+            OrderItem orderItem = orderItemList.get(i);
+            Product product = productFeignClient.detailForFeign(orderItem.getProductId());
+            int stock = product.getStock() + orderItem.getQuantity();
+            productFeignClient.updateStock(orderItem.getProductId(), stock);
+//            msgSender.send(product.getId(), stock);
         }
     }
 
@@ -345,5 +359,16 @@ public class OrderServiceImpl implements OrderService {
         } else {
             throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
         }
+    }
+
+    // 定时删除未付款订单
+    @Override
+    // 获取未支付订单
+    public List<Order> getUnpaidOrders() {
+        Date curTime = new Date();
+        Date endTime = DateUtils.addDays(curTime, -1);
+        Date begTime = DateUtils.addMinutes(endTime, -5);
+        List<Order> unpaidOrders = orderMapper.selectUnpaidOrders(begTime, endTime);
+        return unpaidOrders;
     }
 }

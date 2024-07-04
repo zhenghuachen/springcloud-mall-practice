@@ -1,7 +1,11 @@
 package com.imooc.cloud.mall.practice.cartorder.model.dao;
 
 import com.imooc.cloud.mall.practice.cartorder.model.pojo.Order;
+
+import java.util.Date;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,4 +27,6 @@ public interface OrderMapper {
     List<Order> selectForCustomer(Integer userId);
 
     List<Order> selectAllForAdmin();
+
+    List<Order> selectUnpaidOrders(@Param("begTime")Date begTime, @Param("endTime")Date endTime);
 }

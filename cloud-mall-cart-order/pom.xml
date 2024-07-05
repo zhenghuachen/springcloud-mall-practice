@@ -71,7 +71,7 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-
+        <!-- 依赖于Redisson这个Java客户端库，用于操作Redis数据库。Redisson 提供了丰富的功能，包括分布式对象、分布式集合、分布式锁等-->
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>

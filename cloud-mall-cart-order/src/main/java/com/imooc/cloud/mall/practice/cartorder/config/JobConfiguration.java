@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 描述： 定时任务类
  */
-@Component
+@Component  // Spring 组件，会被 Spring 自动扫描并管理
 public class JobConfiguration {
 
 //    private final Logger log = LoggerFactory.getLogger(JobConfiguration.class);
@@ -39,19 +39,20 @@ public class JobConfiguration {
 
     @Autowired
     RedissonClient redissonClient;
-    @Scheduled(cron = "0 0/5 * * * ?")   // 每5分钟执行一次
+    @Scheduled(cron = "0 0/5 * * * ?")   // 用于配置定时任务的执行策略,每5分钟执行一次
     public void cancelUnpaidOrders() {
+        // 使用Redisson提供的分布式锁，获取一个名为redissonLock的锁对象
         RLock redissonLock = redissonClient.getLock("redissonLock");
-        boolean b = redissonLock.tryLock();
+        boolean b = redissonLock.tryLock();  // 尝试获取锁。获取成功true，表示可以执行任务；失败返回false，表示锁已被其他线程占用
         if (b) {
             try {
                 System.out.println("redisson锁+1");
-                List<Order> unpaidOrders = orderService.getUnpaidOrders();
+                List<Order> unpaidOrders = orderService.getUnpaidOrders();  // 获取未支付订单列表
                 for (int i = 0; i < unpaidOrders.size(); i++) {
                     Order order = unpaidOrders.get(i);
-                    orderService.cancel(order.getOrderNo(), true);
+                    orderService.cancel(order.getOrderNo(), true);  //  对每个未支付订单进行取消操作
                 }
-            } finally {
+            } finally {  // 避免死锁情况
                 redissonLock.unlock();
                 System.out.println("redisson锁已释放");
             }

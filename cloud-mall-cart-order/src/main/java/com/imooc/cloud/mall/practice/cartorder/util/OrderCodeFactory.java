@@ -10,9 +10,20 @@ import java.util.Random;
  *
  */
 public class OrderCodeFactory {
+    // 创建静态ThreadLocal对象simpleDateFormatThreadLocal，用于存储SimpleDateFormat对象；
+    public static ThreadLocal<SimpleDateFormat> simpleDateFormatThreadLocal = new ThreadLocal<SimpleDateFormat>(){
+        // 重写了initialValue()方法，该方法会在首次调用get()方法时被调用，为当前线程初始化一个SimpleDateFormat对象;确保了每个线程都有自己独立的SimpleDateFormat实例
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyyMMddHHmmss");
+        }
+    };
 
     private static String getDateTime() {
-        DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        // 订单量较大时，频繁生成和销毁SimpleDateFormat对象，对新能有影响
+        // DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        // 获取当前线程的SimpleDateFormat对象
+        DateFormat sdf = simpleDateFormatThreadLocal.get();
         return sdf.format(new Date());
     }
 

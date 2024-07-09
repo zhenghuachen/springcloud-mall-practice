@@ -5,12 +5,13 @@ import com.github.pagehelper.PageInfo;
 
 import com.google.zxing.WriterException;
 import com.imooc.cloud.mall.practice.cartorder.feign.ProductFeignClient;
-import com.imooc.cloud.mall.practice.cartorder.feign.UserFeignClient;
+import com.imooc.cloud.mall.practice.cartorder.filter.UserInfoFilter;
 import com.imooc.cloud.mall.practice.cartorder.model.dao.CartMapper;
 import com.imooc.cloud.mall.practice.cartorder.model.dao.OrderItemMapper;
 import com.imooc.cloud.mall.practice.cartorder.model.dao.OrderMapper;
 import com.imooc.cloud.mall.practice.cartorder.model.pojo.Order;
 import com.imooc.cloud.mall.practice.cartorder.model.pojo.OrderItem;
+import com.imooc.cloud.mall.practice.cartorder.model.pojo.Product;
 import com.imooc.cloud.mall.practice.cartorder.model.request.CreateOrderReq;
 import com.imooc.cloud.mall.practice.cartorder.model.vo.CartVO;
 import com.imooc.cloud.mall.practice.cartorder.model.vo.OrderItemVO;
@@ -18,7 +19,6 @@ import com.imooc.cloud.mall.practice.cartorder.model.vo.OrderVO;
 import com.imooc.cloud.mall.practice.cartorder.service.CartService;
 import com.imooc.cloud.mall.practice.cartorder.service.OrderService;
 import com.imooc.cloud.mall.practice.cartorder.util.OrderCodeFactory;
-import com.imooc.cloud.mall.practice.categoryproduct.model.pojo.Product;
 import com.imooc.cloud.mall.practice.common.common.Constant.Cart;
 import com.imooc.cloud.mall.practice.common.common.Constant.OrderStatusEnum;
 import com.imooc.cloud.mall.practice.common.common.Constant.SaleStatus;
@@ -70,9 +70,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Value("${file.upload.dir}")
     String FILE_UPLOAD_DIR;
-
-    @Autowired
-    UserFeignClient userFeignClient;
+    
 
     //数据库事务
     @Transactional(rollbackFor = Exception.class)  // 在执行过程中如果发生任何异常（Exception），则进行事务回滚（rollback）
@@ -80,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
     public String create(CreateOrderReq createOrderReq) {
 
         //拿到用户ID
-        Integer userId = userFeignClient.getUser().getId();
+        Integer userId = UserInfoFilter.userThreadLocal.get().getId();
 
         //从购物车查找已经勾选的商品
         List<CartVO> cartVOList = cartService.list(userId);
@@ -194,7 +192,7 @@ public class OrderServiceImpl implements OrderService {
             throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
         }
         //订单存在，需要判断所属
-        Integer userId = userFeignClient.getUser().getId();
+        Integer userId = UserInfoFilter.userThreadLocal.get().getId();
         if (!order.getUserId().equals(userId)) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
         }
@@ -221,7 +219,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageInfo listForCustomer(Integer pageNum, Integer pageSize) {
-        Integer userId = userFeignClient.getUser().getId();
+        Integer userId = UserInfoFilter.userThreadLocal.get().getId();
         PageHelper.startPage(pageNum, pageSize);
         List<Order> orderList = orderMapper.selectForCustomer(userId);
         List<OrderVO> orderVOList = orderListToOrderVOList(orderList);
@@ -250,8 +248,7 @@ public class OrderServiceImpl implements OrderService {
         //验证用户身份
         //订单存在，需要判断所属
         if (!isFromSystem) {
-            Integer userId = userFeignClient.getUser()
-                    .getId();
+            Integer userId = UserInfoFilter.userThreadLocal.get().getId();
             if (!order.getUserId().equals(userId)) {
                 throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
             }
@@ -347,8 +344,8 @@ public class OrderServiceImpl implements OrderService {
             throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
         }
         //如果是普通用户，就要校验订单的所属(普通用户 + 订单的userId和用户的userId不同,则拦住)
-        if (userFeignClient.getUser().getRole().equals(1) && !order.getUserId()
-                .equals(userFeignClient.getUser().getId())) {
+        if (UserInfoFilter.userThreadLocal.get().getRole().equals(1) && !order.getUserId()
+                .equals(UserInfoFilter.userThreadLocal.get().getId())) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
         }
         //发货后可以完结订单

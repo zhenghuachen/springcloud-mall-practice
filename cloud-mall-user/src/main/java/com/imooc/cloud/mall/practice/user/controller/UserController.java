@@ -9,6 +9,7 @@ import com.imooc.cloud.mall.practice.common.exception.ImoocMallExceptionEnum;
 
 import javax.servlet.http.HttpSession;
 
+import com.imooc.cloud.mall.practice.user.filter.UserInfoFilter;
 import com.imooc.cloud.mall.practice.user.model.pojo.User;
 import com.imooc.cloud.mall.practice.user.server.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,10 +75,11 @@ public class UserController {
     @ResponseBody
     public ApiRestResponse updateUserInfo(HttpSession session, @RequestParam String signature)
             throws ImoocMallException {
-        User currentUser = (User) session.getAttribute(Constant.IMOOC_MALL_USER);
-        if (currentUser == null) {
-            return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_LOGIN);
-        }
+//        User currentUser = (User) session.getAttribute(Constant.IMOOC_MALL_USER);
+//        if (currentUser == null) {
+//            return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_LOGIN);
+//        }
+        User currentUser = UserInfoFilter.userThreadLocal.get();
         User user = new User();
         user.setId(currentUser.getId());
         user.setPersonalizedSignature(signature);

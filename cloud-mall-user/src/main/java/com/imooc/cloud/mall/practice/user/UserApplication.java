@@ -12,6 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @MapperScan(basePackages = "com.imooc.cloud.mall.practice.user.model.dao")
+//@EnableRedisHttpSession
 @ComponentScan({"com.imooc.cloud.mall.practice.user", "com.imooc.cloud.mall.practice.common"})
 public class UserApplication {
 

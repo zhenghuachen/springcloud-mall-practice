@@ -16,12 +16,12 @@ public class Constant {
     public static final String IMOOC_MALL_USER = "imooc_mall_user";
     public static final String SALT = "8svbsvjkweDF,.03[";
 
-    public static String FILE_UPLOAD_DIR;
-
-    @Value("${file.upload.dir}")
-    public void setFileUploadDir(String fileUploadDir) {
-        FILE_UPLOAD_DIR = fileUploadDir;
-    }
+//    public static String FILE_UPLOAD_DIR;
+//
+//    @Value("${file.upload.dir}")
+//    public void setFileUploadDir(String fileUploadDir) {
+//        FILE_UPLOAD_DIR = fileUploadDir;
+//    }
 
     public interface ProductListOrderBy {
 
@@ -80,4 +80,10 @@ public class Constant {
             this.code = code;
         }
     }
+
+    public static final String USER_ID = "user_id";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_ROLE = "user_role";
+
+    public static final Integer ADMIN_ROLE =2;
 }

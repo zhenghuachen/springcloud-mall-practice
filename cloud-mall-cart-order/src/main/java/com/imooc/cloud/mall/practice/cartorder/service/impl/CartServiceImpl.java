@@ -2,11 +2,11 @@ package com.imooc.cloud.mall.practice.cartorder.service.impl;
 
 
 import com.imooc.cloud.mall.practice.cartorder.feign.ProductFeignClient;
+import com.imooc.cloud.mall.practice.cartorder.model.pojo.Product;
 import com.imooc.cloud.mall.practice.cartorder.model.dao.CartMapper;
 import com.imooc.cloud.mall.practice.cartorder.model.pojo.Cart;
 import com.imooc.cloud.mall.practice.cartorder.model.vo.CartVO;
 import com.imooc.cloud.mall.practice.cartorder.service.CartService;
-import com.imooc.cloud.mall.practice.categoryproduct.model.pojo.Product;
 import com.imooc.cloud.mall.practice.common.common.Constant;
 import com.imooc.cloud.mall.practice.common.common.Constant.SaleStatus;
 import com.imooc.cloud.mall.practice.common.exception.ImoocMallException;

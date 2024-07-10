@@ -57,6 +57,12 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <!--  Auth0公司提供的Java JWT（JSON Web Token）库。它是用于创建和解析JWT Token 的库，支持生成和验证JWT，用于在分布式系统中实现身份认证和授权 -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.14.0</version>
+        </dependency>
     </dependencies>
 
 

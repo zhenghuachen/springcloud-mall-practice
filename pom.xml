@@ -68,6 +68,20 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<!--用于管理Spring Cloud Alibaba相关依赖的Maven依赖项
+				groupId: 指定了依赖的组织或者公司，这里是 com.alibaba.cloud，表示依赖来自阿里巴巴的云平台。
+				artifactId: 指定了具体的依赖项目或者模块，这里是 spring-cloud-alibaba-dependencies，表示阿里巴巴提供的Spring Cloud Alibaba的依赖管理。
+				version: 指定了依赖的版本号，这里是 2.1.4.RELEASE，表示使用的是该版本的Spring Cloud Alibaba依赖管理。
+				type: 指定了依赖的类型，这里是 pom，表示这个依赖项本身是一个pom文件，用于导入其他相关的依赖。
+				scope: 指定了依赖的作用域，这里是 import，表示该依赖的主要作用是导入其他的依赖，而不直接参与项目的编译。
+			-->
+			<dependency>
+				<groupId>com.alibaba.cloud</groupId>
+				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
+				<version>2.1.4.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

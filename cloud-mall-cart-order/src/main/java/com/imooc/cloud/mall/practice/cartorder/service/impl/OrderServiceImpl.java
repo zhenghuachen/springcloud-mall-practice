@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +73,24 @@ public class OrderServiceImpl implements OrderService {
     String FILE_UPLOAD_DIR;
     
 
-    //数据库事务
-    @Transactional(rollbackFor = Exception.class)  // 在执行过程中如果发生任何异常（Exception），则进行事务回滚（rollback）
+    //数据库事务(但是只能保证在现有微服务中实现事务的回滚)
+    /**
+     * CREATE TABLE `undo_log` (
+     *   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+     *   `branch_id` bigint(20) NOT NULL,
+     *   `xid` varchar(100) NOT NULL,
+     *   `context` varchar(128) NOT NULL,
+     *   `rollback_info` longblob NOT NULL,
+     *   `log_status` int(11) NOT NULL,
+     *   `log_created` datetime NOT NULL,
+     *   `log_modified` datetime NOT NULL,
+     *   `ext` varchar(100) DEFAULT NULL,
+     *   PRIMARY KEY (`id`),
+     *   UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+     * ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+     */
+    // @Transactional(rollbackFor = Exception.class)  // 在执行过程中如果发生任何异常（Exception），则进行事务回滚（rollback）
+    @GlobalTransactional
     @Override
     public String create(CreateOrderReq createOrderReq) {
 

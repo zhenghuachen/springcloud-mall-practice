@@ -83,6 +83,11 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <!-- 引入Spring Cloud Alibaba中的Seata分布式事务管理器 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

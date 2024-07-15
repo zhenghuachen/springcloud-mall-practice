@@ -16,6 +16,7 @@ import com.imooc.cloud.mall.practice.cartorder.model.request.CreateOrderReq;
 import com.imooc.cloud.mall.practice.cartorder.model.vo.CartVO;
 import com.imooc.cloud.mall.practice.cartorder.model.vo.OrderItemVO;
 import com.imooc.cloud.mall.practice.cartorder.model.vo.OrderVO;
+import com.imooc.cloud.mall.practice.cartorder.mq.MsgSender;
 import com.imooc.cloud.mall.practice.cartorder.service.CartService;
 import com.imooc.cloud.mall.practice.cartorder.service.OrderService;
 import com.imooc.cloud.mall.practice.cartorder.util.OrderCodeFactory;
@@ -71,6 +72,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Value("${file.upload.dir}")
     String FILE_UPLOAD_DIR;
+
+    @Autowired
+    MsgSender msgSender;
     
 
     //数据库事务(但是只能保证在现有微服务中实现事务的回滚)
@@ -277,15 +281,15 @@ public class OrderServiceImpl implements OrderService {
         } else {
             throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
         }
-        // 回复商品库存
+        // 恢复商品库存
         // 获取订单对应的orderitemList
         List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(order.getOrderNo());
         for (int i = 0; i < orderItemList.size(); i++) {
             OrderItem orderItem = orderItemList.get(i);
             Product product = productFeignClient.detailForFeign(orderItem.getProductId());
             int stock = product.getStock() + orderItem.getQuantity();
-            productFeignClient.updateStock(orderItem.getProductId(), stock);
-//            msgSender.send(product.getId(), stock);
+            // productFeignClient.updateStock(orderItem.getProductId(), stock);
+            msgSender.send(product.getId(), stock);
         }
     }
 
